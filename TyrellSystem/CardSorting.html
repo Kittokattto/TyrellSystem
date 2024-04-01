@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Card Distribution</title>
+</head>
+<body>
+    <h1>Card Distribution</h1>
+    <form id="cardForm">
+        <label for="numPeople">Number of People:</label>
+        <input type="text" id="numPeople" name="numPeople" required>
+        <button type="submit">Distribute Cards</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('cardForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Get the number of people from the input field
+            var numPeople = document.getElementById('numPeople').value;
+
+            // Make an AJAX request to distribute_cards.php with the number of people as a query parameter
+            fetch('distribute_cards.php?numPeople=' + numPeople)
+                .then(response => response.json()) // Parse the response as JSON
+                .then(data => {
+                    // Display the result in a table
+                    var resultDiv = document.getElementById('result');
+                    var table = '<table border="1"><tr><th>Index</th><th>Cards</th></tr>';
+                    data.forEach((cards, index) => {
+                        table += '<tr><td>' + (index + 1)  + '</td><td>' + cards.join(', ') + '</td></tr>';
+                    });
+                    table += '</table>';
+                    resultDiv.innerHTML = table;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+</html>
